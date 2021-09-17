@@ -1,12 +1,27 @@
-const parse = require("./lib/cssCopy/parser");
-const stringify = require("./lib/cssCopy/stringify");
+const CSS = require("./lib/cssCopy");
 let css = `
+@import url("fineprint.css") print;
 body {
-  color: #333; // 这种注释内容不会出现在生成的css文件中
-  padding: 0; /* 这种注释内容会出现在生成的css文件中 */
+  colors:red;
+  font-size:10px;
+  .disabled {
+    color: gray;
+    @extend .a; /*111*/
+  }
+  @include link-colors(
+    $normal: blue,
+    $visited: green,
+    $hover: red
+  );
+  @mixin link-colors($normal, $hover, $visited) {
+    color: $normal;
+    &:hover { color: $hover; }
+    &:visited { color: $visited; }
+  }
 }
-`;
-let ast = parse(css);
 
-let str = stringify(ast);
+`;
+let ast = CSS.parse(css);
+
+let str = CSS.stringify(ast);
 console.log(str);
